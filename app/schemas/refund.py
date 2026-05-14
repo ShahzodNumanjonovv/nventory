@@ -1,9 +1,9 @@
 from datetime import date
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
-from app.schemas.common import ORMModel
+from app.schemas.common import ORMModel, validate_business_date
 
 
 class ProviderRefundItemIn(BaseModel):
@@ -15,6 +15,11 @@ class ProviderRefundCreate(BaseModel):
     batch_id: int
     refund_date: date | None = None
     items: list[ProviderRefundItemIn] = Field(min_length=1)
+
+    @field_validator("refund_date")
+    @classmethod
+    def _check_date(cls, v: date | None) -> date | None:
+        return validate_business_date(v)
 
 
 class ProviderRefundRead(ORMModel):
@@ -33,6 +38,11 @@ class ClientRefundItemIn(BaseModel):
 class ClientRefundCreate(BaseModel):
     refund_date: date | None = None
     items: list[ClientRefundItemIn] = Field(min_length=1)
+
+    @field_validator("refund_date")
+    @classmethod
+    def _check_date(cls, v: date | None) -> date | None:
+        return validate_business_date(v)
 
 
 class ClientRefundRead(ORMModel):

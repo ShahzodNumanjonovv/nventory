@@ -1,9 +1,9 @@
 from datetime import date
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
-from app.schemas.common import ORMModel
+from app.schemas.common import ORMModel, validate_business_date
 
 
 class PurchaseItemIn(BaseModel):
@@ -18,6 +18,11 @@ class PurchaseCreate(BaseModel):
     storage_id: int
     purchase_date: date | None = None
     items: list[PurchaseItemIn] = Field(min_length=1)
+
+    @field_validator("purchase_date")
+    @classmethod
+    def _check_date(cls, v: date | None) -> date | None:
+        return validate_business_date(v)
 
 
 class BatchItemRead(ORMModel):

@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Query
 
 from app.api.deps import DBSession
 from app.schemas.order import AvailableProduct
@@ -12,5 +14,9 @@ router = APIRouter(prefix="/products", tags=["products"])
     response_model=list[AvailableProduct],
     summary="Fetch available products for ordering",
 )
-async def fetch_available(db: DBSession) -> list[AvailableProduct]:
-    return await list_available_products(db)
+async def fetch_available(
+    db: DBSession,
+    limit: Annotated[int, Query(ge=1, le=500)] = 200,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> list[AvailableProduct]:
+    return await list_available_products(db, limit=limit, offset=offset)

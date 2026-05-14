@@ -19,6 +19,7 @@ dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.24",
     "httpx>=0.28",
+    "aiosqlite>=0.20",
     "ruff>=0.8",
 ]
 
@@ -36,6 +37,10 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]                   # test fixtures are often long single-line payloads
+"app/api/v1/*" = ["B008"]              # FastAPI's documented Query/Depends pattern uses calls in defaults
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
