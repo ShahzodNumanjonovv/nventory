@@ -11,3 +11,4 @@ venv/
 .vscode/
 *.sqlite
 *.db
+.DS_Store
